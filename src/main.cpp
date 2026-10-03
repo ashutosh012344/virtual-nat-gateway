@@ -1,106 +1,65 @@
 #include <iostream>
 
-#include "nat_engine.hpp"
 #include "packet.hpp"
+#include "port_forwarder.hpp"
 
 int main() {
     std::cout << "========================================\n";
     std::cout << "       VIRTUAL NAT GATEWAY\n";
-    std::cout << "========================================\n\n";
+    std::cout << "========================================\n";
 
-    NatEngine nat(
-        "203.0.113.5",
-        40001
+    PortForwarder forwarder;
+
+    // Configure port forwarding:
+    // 203.0.113.5:8080 -> 192.168.1.100:80
+    forwarder.addRule(
+        8080,
+        "192.168.1.100",
+        80
     );
 
-    // ------------------------------------------------
-    // 1. Internal client sends request
-    // ------------------------------------------------
+    forwarder.displayRules();
 
-    Packet request(
-        "192.168.1.10",
-        5000,
-        "10.0.0.20",
+    // Incoming packet from an external client
+    Packet incomingPacket(
+        "203.0.113.10",
+        55000,
+        "203.0.113.5",
         8080,
         Protocol::TCP,
-        "Hello Server"
+        "Hello Internal Server"
     );
 
-    std::cout << "Outgoing Packet\n";
+    std::cout << "\nIncoming Packet\n";
     std::cout << "----------------------------------------\n";
     std::cout << "Source      : "
-              << request.getSourceIp()
+              << incomingPacket.getSourceIp()
               << ":"
-              << request.getSourcePort()
+              << incomingPacket.getSourcePort()
               << "\n";
 
     std::cout << "Destination : "
-              << request.getDestinationIp()
+              << incomingPacket.getDestinationIp()
               << ":"
-              << request.getDestinationPort()
+              << incomingPacket.getDestinationPort()
               << "\n";
 
-    // NAT translation
-    Packet translatedRequest =
-        nat.translateOutgoing(request);
+    // Apply port forwarding
+    Packet forwardedPacket =
+        forwarder.forwardPacket(incomingPacket);
 
-    std::cout << "\nAfter Outgoing NAT\n";
+    std::cout << "\nAfter Port Forwarding\n";
     std::cout << "----------------------------------------\n";
     std::cout << "Source      : "
-              << translatedRequest.getSourceIp()
+              << forwardedPacket.getSourceIp()
               << ":"
-              << translatedRequest.getSourcePort()
+              << forwardedPacket.getSourcePort()
               << "\n";
 
     std::cout << "Destination : "
-              << translatedRequest.getDestinationIp()
+              << forwardedPacket.getDestinationIp()
               << ":"
-              << translatedRequest.getDestinationPort()
-              << "\n";
-
-    // ------------------------------------------------
-    // 2. External server sends response
-    // ------------------------------------------------
-
-    Packet response(
-        "10.0.0.20",
-        8080,
-        "203.0.113.5",
-        40001,
-        Protocol::TCP,
-        "Hello Client"
-    );
-
-    std::cout << "\nIncoming Response\n";
-    std::cout << "----------------------------------------\n";
-    std::cout << "Source      : "
-              << response.getSourceIp()
-              << ":"
-              << response.getSourcePort()
-              << "\n";
-
-    std::cout << "Destination : "
-              << response.getDestinationIp()
-              << ":"
-              << response.getDestinationPort()
-              << "\n";
-
-    // Reverse NAT translation
-    Packet translatedResponse =
-        nat.translateIncoming(response);
-
-    std::cout << "\nAfter Reverse NAT\n";
-    std::cout << "----------------------------------------\n";
-    std::cout << "Source      : "
-              << translatedResponse.getSourceIp()
-              << ":"
-              << translatedResponse.getSourcePort()
-              << "\n";
-
-    std::cout << "Destination : "
-              << translatedResponse.getDestinationIp()
-              << ":"
-              << translatedResponse.getDestinationPort()
+              << forwardedPacket.getDestinationPort()
               << "\n";
 
     return 0;
