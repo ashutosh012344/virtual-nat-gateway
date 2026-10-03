@@ -1,0 +1,12 @@
+# CMake build directory
+build/
+
+# Compiled binaries
+*.o
+*.out
+
+# Debugging
+*.dSYM/
+
+# Logs
+logs/*.log
