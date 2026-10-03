@@ -12,22 +12,46 @@ NatGateway::NatGateway(
 Packet NatGateway::processOutgoing(
     const Packet& packet
 ) {
-    return natEngine_.translateOutgoing(packet);
+    statistics_.recordOutgoingPacket();
+
+    Packet translatedPacket =
+        natEngine_.translateOutgoing(packet);
+
+    statistics_.recordNatTranslation();
+
+    return translatedPacket;
 }
 
 Packet NatGateway::processIncoming(
     const Packet& packet
 ) {
+    statistics_.recordIncomingPacket();
+
     const PortForwardRule* rule =
         portForwarder_.findRule(
             packet.getDestinationPort()
         );
 
     if (rule != nullptr) {
+        statistics_.recordPortForwarding();
+
         return portForwarder_.forwardPacket(packet);
     }
 
-    return natEngine_.translateIncoming(packet);
+    Packet translatedPacket =
+        natEngine_.translateIncoming(packet);
+
+    if (translatedPacket.getDestinationIp() !=
+            packet.getDestinationIp() ||
+        translatedPacket.getDestinationPort() !=
+            packet.getDestinationPort()) {
+
+        statistics_.recordReverseNatTranslation();
+    } else {
+        statistics_.recordDroppedPacket();
+    }
+
+    return translatedPacket;
 }
 
 void NatGateway::addPortForwardRule(
@@ -47,4 +71,9 @@ void NatGateway::displayStatus() const {
     std::cout << "----------------------------------------\n";
 
     portForwarder_.displayRules();
+
+  
+}
+void NatGateway::displayStatistics() const {
+    statistics_.display();
 }

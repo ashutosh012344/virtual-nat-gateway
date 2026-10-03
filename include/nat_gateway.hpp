@@ -3,6 +3,7 @@
 
 #include "nat_engine.hpp"
 #include "port_forwarder.hpp"
+#include "statistics.hpp"
 
 class NatGateway {
 public:
@@ -12,7 +13,6 @@ public:
     );
 
     Packet processOutgoing(const Packet& packet);
-
     Packet processIncoming(const Packet& packet);
 
     void addPortForwardRule(
@@ -22,10 +22,12 @@ public:
     );
 
     void displayStatus() const;
+    void displayStatistics() const;
 
 private:
     NatEngine natEngine_;
     PortForwarder portForwarder_;
+    Statistics statistics_;
 };
 
 #endif

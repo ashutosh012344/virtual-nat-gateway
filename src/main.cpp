@@ -120,6 +120,6 @@ int main() {
         "After Port Forwarding",
         forwardedRequest
     );
-
+    gateway.displayStatistics();
     return 0;
 }

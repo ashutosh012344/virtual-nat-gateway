@@ -16,6 +16,7 @@ add_executable(vnat-gateway
     src/nat_engine.cpp
     src/port_forwarder.cpp
     src/nat_gateway.cpp
+    src/statistics.cpp
 )
 
 target_include_directories(vnat-gateway
