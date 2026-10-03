@@ -11,4 +11,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(vnat-gateway
     src/main.cpp
+    src/packet.cpp
+    src/connection_table.cpp
+    src/nat_engine.cpp
+)
+
+target_include_directories(vnat-gateway
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
 )
