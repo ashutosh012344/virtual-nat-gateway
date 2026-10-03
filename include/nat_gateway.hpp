@@ -4,6 +4,7 @@
 #include "nat_engine.hpp"
 #include "port_forwarder.hpp"
 #include "statistics.hpp"
+#include "kernel_monitor.hpp"
 
 class NatGateway {
 public:
@@ -23,11 +24,13 @@ public:
 
     void displayStatus() const;
     void displayStatistics() const;
+    void syncKernelStatistics() const;
 
 private:
     NatEngine natEngine_;
     PortForwarder portForwarder_;
     Statistics statistics_;
+    KernelMonitor kernelMonitor_;
 };
 
 #endif

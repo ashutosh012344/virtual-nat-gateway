@@ -53,3 +53,31 @@ void Statistics::display() const {
     std::cout << "Dropped packets        : "
               << droppedPackets_ << '\n';
 }
+
+std::size_t Statistics::getTotalPackets() const {
+    return totalPackets_;
+}
+
+std::size_t Statistics::getOutgoingPackets() const {
+    return outgoingPackets_;
+}
+
+std::size_t Statistics::getIncomingPackets() const {
+    return incomingPackets_;
+}
+
+std::size_t Statistics::getNatTranslations() const {
+    return natTranslations_;
+}
+
+std::size_t Statistics::getReverseNatTranslations() const {
+    return reverseNatTranslations_;
+}
+
+std::size_t Statistics::getPortForwardedPackets() const {
+    return portForwardedPackets_;
+}
+
+std::size_t Statistics::getDroppedPackets() const {
+    return droppedPackets_;
+}

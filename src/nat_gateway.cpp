@@ -77,3 +77,14 @@ void NatGateway::displayStatus() const {
 void NatGateway::displayStatistics() const {
     statistics_.display();
 }
+
+void NatGateway::syncKernelStatistics() const {
+    kernelMonitor_.updateStatistics(
+        statistics_.getTotalPackets(),
+        statistics_.getOutgoingPackets(),
+        statistics_.getIncomingPackets(),
+        statistics_.getNatTranslations(),
+        statistics_.getReverseNatTranslations(),
+        statistics_.getPortForwardedPackets()
+    );
+}

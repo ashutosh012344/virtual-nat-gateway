@@ -18,6 +18,7 @@ add_executable(vnat-gateway
     src/port_forwarder.cpp
     src/nat_gateway.cpp
     src/statistics.cpp
+    src/kernel_monitor.cpp
 )
 
 target_include_directories(vnat-gateway
@@ -34,6 +35,7 @@ add_executable(nat-tests
     src/port_forwarder.cpp
     src/nat_gateway.cpp
     src/statistics.cpp
+    src/kernel_monitor.cpp
 )
 
 target_include_directories(nat-tests

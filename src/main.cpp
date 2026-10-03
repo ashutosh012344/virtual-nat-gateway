@@ -121,5 +121,7 @@ int main() {
         forwardedRequest
     );
     gateway.displayStatistics();
+    gateway.syncKernelStatistics();
+
     return 0;
 }
